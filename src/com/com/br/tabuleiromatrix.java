@@ -15,23 +15,41 @@ public class tabuleiromatrix {
 
 
     static String nomeJogador1, nomeJogador2;
-    static int tamanhoX =9, tamanhoY=9, quantidadeDeNavios=10, limiteMaximoDeNavios =10;
+    static int tamanhoX =9, tamanhoY=9, quantidadeDeNavios=10;
     static int tabuleiroJogador1[][], tabuleiroJogador2[][];
     static Scanner input = new Scanner(System.in);
     static int naviosJogador1, naviosJogador2;
 
-    public static void obterNomesDosJogadores() {
-        System.out.println("Digite o nome do Jogador 1: ");
-        nomeJogador1 = input.next();
-        System.out.println("Digite o nome do Jogador 2: ");
-        nomeJogador2 = input.next();
+    public static void NomesDosJogadores() {
+        Random random = new Random();
+        System.out.println("Digite o nome do Capitão: ");
+        nomeJogador1 = "Capitão  " + input.next();
+        nomeJogador2 = "";
+        int numero = random.nextInt(3);
+        switch (numero){
+            case 0:
+            nomeJogador2 = "Capitão Barba Branca";
+            break;
+            case 1:
+                nomeJogador2 ="Capitão Jack Sparrow";
+                break;
+            case 2:
+                nomeJogador2 = "Capitão Alma Negra";
+                break;
+            case 3:
+                nomeJogador2 = "Capitão  Gancho";
+                break;
+            default:
+                nomeJogador2 = "Capitão Alma negra";
+        }
+
     }
 
 
 
     public static void iniciandoOsTamanhosDosTabuleiros() {
         tabuleiroJogador1 = retornarNovoTabuleiroVazio();
-        tabuleiroJogador2 = retornarNovoTabuleiroVazio();
+
     }
 
     public static int[][] retornarNovoTabuleiroVazio() {
@@ -82,11 +100,11 @@ public class tabuleiromatrix {
         tabuleiroJogador2 = retornarNovoTabuleiroComOsNavios();
     }
 
-    public static void exibirNumerosDasColunasDosTabuleiros() {
+    public static void numeroDoTabuleiroX() {
         int numeroDaColuna = 1;
         String numerosDoTabuleiro = "   ";
 
-        for(int i = 0; i < tamanhoY; i++) {
+        for(int i = 0; i < 9; i++) {
             numerosDoTabuleiro += (numeroDaColuna++) + " ";
         }
         System.out.println(numerosDoTabuleiro);
@@ -94,7 +112,7 @@ public class tabuleiromatrix {
 
     public static void exibirTabuleiro(String nomeDoJogador, int[][] tabuleiro, boolean seuTabuleiro) {
         System.out.println("|----- " + nomeDoJogador + " -----|");
-        exibirNumerosDasColunasDosTabuleiros();
+        numeroDoTabuleiroX();
         String linhaDoTabuleiro = "";
         char letraDaLinha = 65;
         for(int[] linha : tabuleiro) {
