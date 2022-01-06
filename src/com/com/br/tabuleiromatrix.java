@@ -102,10 +102,10 @@ public class tabuleiromatrix {
 
     public static void numeroDoTabuleiroX() {
         int numeroDaColuna = 1;
-        String numerosDoTabuleiro = "   ";
+        String numerosDoTabuleiro = "    ";
 
         for(int i = 0; i < 9; i++) {
-            numerosDoTabuleiro += (numeroDaColuna++) + " ";
+            numerosDoTabuleiro += (numeroDaColuna++) + "   ";
         }
         System.out.println(numerosDoTabuleiro);
     }
@@ -116,27 +116,27 @@ public class tabuleiromatrix {
         String linhaDoTabuleiro = "";
         char letraDaLinha = 65;
         for(int[] linha : tabuleiro) {
-            linhaDoTabuleiro = (letraDaLinha++) + " |";
+            linhaDoTabuleiro = (letraDaLinha++) + " | ";
 
             for (int coluna : linha) {
                 switch(coluna) {
                     case VAZIO :
-                        linhaDoTabuleiro += " |";
+                        linhaDoTabuleiro += "  | ";
                         break;
                     case NAVIO :
                         if (seuTabuleiro) {
-                            linhaDoTabuleiro += "N|";
+                            linhaDoTabuleiro += "N | ";
                             break;
                         } else {
-                            linhaDoTabuleiro += " |";
+                            linhaDoTabuleiro += " | ";
                             break;
                         }
                     case ERROU_TIRO :
-                        linhaDoTabuleiro += "-|";
+                        linhaDoTabuleiro += "- | ";
                         break;
 
                     case ACERTOU_TIRO :
-                        linhaDoTabuleiro += "*|";
+                        linhaDoTabuleiro += "* | ";
                         break;
                 }
             }
