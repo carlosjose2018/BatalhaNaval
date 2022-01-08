@@ -202,13 +202,13 @@ public class tabuleiromatrix {
                 naviosPiratas--;
                 System.out.println("Você acertou um navio!"+naviosPiratas);
 
-            }else if(tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO && tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == ERROU_TIRO){
+            }else if(tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO || tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == ERROU_TIRO){
                 tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = TIRO_NA_AGUA_COM_NAVIO;
                 tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = TIRO_NA_AGUA_COM_NAVIO;
                 System.out.println("Capitão Danificamos nosso navio e ainda erramoso tiro"+numeroDoJogador);
 
             }else if(tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]]== NAVIO){
-                tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]]= TIRO_CERTEIRO;
+                tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]]= ACERTOU_TIRO;
                 naviosPiratas --;
                 System.out.println("Acertamos no navio do pirata");
             }
