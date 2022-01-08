@@ -198,7 +198,7 @@ public class tabuleiromatrix {
         if (numeroDoJogador == 1) {
             if (tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO && tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO) {
                 tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = TIRO_CERTEIRO;
-
+                tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = TIRO_CERTEIRO;
                 naviosPiratas--;
                 System.out.println("Você acertou um navio!"+naviosPiratas);
 
@@ -214,7 +214,6 @@ public class tabuleiromatrix {
             }
 
             else {
-                tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ERROU_TIRO;
                 tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ERROU_TIRO;
                 System.out.println("Erramos  o tiro capitão ");
             }
