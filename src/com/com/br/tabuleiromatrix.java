@@ -9,62 +9,63 @@ public class tabuleiromatrix {
     static final int NAVIO = 1;
     static final int ERROU_TIRO = 2;
     static final int ACERTOU_TIRO = 3;
-
+    static final int TIRO_CERTEIRO = 4;
+    static final int TIRO_NA_AGUA_COM_NAVIO =5;
     static final int POSICAO_X = 0;
     static final int POSICAO_Y = 1;
 
 
-    static String nomeJogador1, nomeJogador2;
+    static String capitao, pirata;
     static int tamanhoX =9, tamanhoY=9, quantidadeDeNavios=10;
-    static int tabuleiroJogador1[][], tabuleiroJogador2[][];
+    static int tabuleiroCapitao[][], tabuleiroPirata[][];
     static Scanner input = new Scanner(System.in);
-    static int naviosJogador1, naviosJogador2;
+    static int naviosCapitao, naviosPiratas;
 
     public static void NomesDosJogadores() {
         Random random = new Random();
         System.out.println("Digite o nome do Capitão: ");
-        nomeJogador1 = "Capitão  " + input.next();
-        nomeJogador2 = "";
+        capitao = "Capitão  " + input.next();
+        pirata = "";
         int numero = random.nextInt(3);
         switch (numero){
             case 0:
-            nomeJogador2 = "Capitão Barba Branca";
+            pirata = "Capitão Barba Branca";
             break;
             case 1:
-                nomeJogador2 ="Capitão Jack Sparrow";
+                pirata ="Capitão Jack Sparrow";
                 break;
             case 2:
-                nomeJogador2 = "Capitão Alma Negra";
+                pirata = "Capitão Alma Negra";
                 break;
             case 3:
-                nomeJogador2 = "Capitão  Gancho";
+                pirata = "Capitão  Gancho";
                 break;
             default:
-                nomeJogador2 = "Capitão Alma negra";
+                pirata = "Capitão Alma negra";
         }
 
     }
 
 
 
-    public static void iniciandoOsTamanhosDosTabuleiros() {
-        tabuleiroJogador1 = retornarNovoTabuleiroVazio();
-
+    public static void tamanhoDoTabuleiro() {
+        tabuleiroCapitao = tabuleiroVazio();
+        tabuleiroPirata = tabuleiroVazio();
     }
 
-    public static int[][] retornarNovoTabuleiroVazio() {
+    public static int[][] tabuleiroVazio() {
         return new int[tamanhoX][tamanhoY];
     }
 
 
 
-    public static void instanciarContadoresDeNaviosDosJogadores() {
-        naviosJogador1 = quantidadeDeNavios;
-        naviosJogador2 = quantidadeDeNavios;
+    public static void instanciarQuantidadeDeNavios() {
+        naviosCapitao = quantidadeDeNavios;
+        naviosPiratas = quantidadeDeNavios;
     }
 
-    public static int[][] retornarNovoTabuleiroComOsNavios() {
-        int novoTabuleiro[][] = retornarNovoTabuleiroVazio();
+    public static int[][] novosTabuleiroComOsNavios() {
+        int novoTabuleiro[][] = tabuleiroVazio();
         int quantidadeRestanteDeNavios = quantidadeDeNavios;
         int x= 0, y= 0;
         Random numeroAleatorio = new Random();
@@ -96,8 +97,8 @@ public class tabuleiromatrix {
     }
 
     public static void inserirOsNaviosNosTabuleirosDosJogadores() {
-        tabuleiroJogador1 = retornarNovoTabuleiroComOsNavios();
-        tabuleiroJogador2 = retornarNovoTabuleiroComOsNavios();
+        tabuleiroCapitao = novosTabuleiroComOsNavios();
+        tabuleiroPirata =novosTabuleiroComOsNavios();
     }
 
     public static void numeroDoTabuleiroX() {
@@ -138,6 +139,13 @@ public class tabuleiromatrix {
                     case ACERTOU_TIRO :
                         linhaDoTabuleiro += "* | ";
                         break;
+                    case TIRO_CERTEIRO:
+                        linhaDoTabuleiro +="X | ";
+                        break;
+                    case TIRO_NA_AGUA_COM_NAVIO:
+                        linhaDoTabuleiro +="n | ";
+                        break;
+
                 }
             }
             System.out.println(linhaDoTabuleiro);
@@ -145,8 +153,10 @@ public class tabuleiromatrix {
     }
 
     public static void exibirTabuleirosDosJogadores() {
-        exibirTabuleiro(nomeJogador1, tabuleiroJogador1, true);
-        exibirTabuleiro(nomeJogador2, tabuleiroJogador2, false);
+        exibirTabuleiro(capitao, tabuleiroCapitao, true);
+        exibirTabuleiro(pirata,tabuleiroPirata,false);
+        //caso seja retirado o tabuliro em baixo muda.
+        //Posivel implementação de vez ex  vez do pirata;
     }
 
     public static boolean validarPosicoesInseridasPeloJogador(int[] posicoes) {
@@ -186,23 +196,35 @@ public class tabuleiromatrix {
 
     public static void inserirValoresDaAcaoNoTabuleiro(int[] posicoes, int numeroDoJogador) {
         if (numeroDoJogador == 1) {
-            if (tabuleiroJogador2[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO) {
-                tabuleiroJogador2[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ACERTOU_TIRO;
-                naviosJogador2--;
-                System.out.println("Você acertou um navio!");
-            } else {
-                tabuleiroJogador2[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ERROU_TIRO;
-                System.out.println("Você errou o tiro!");
+            if (tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO && tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO) {
+                tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = TIRO_CERTEIRO;
+
+                naviosPiratas--;
+                System.out.println("Você acertou um navio!"+naviosPiratas);
+
+            }else if(tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO && tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == ERROU_TIRO){
+                tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = TIRO_NA_AGUA_COM_NAVIO;
+                tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = TIRO_NA_AGUA_COM_NAVIO;
+                System.out.println("Capitão Danificamos nosso navio e ainda erramoso tiro"+numeroDoJogador);
+
+            }else if(tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]]== NAVIO){
+                tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]]= TIRO_CERTEIRO;
+                naviosPiratas --;
+                System.out.println("Acertamos no navio do pirata");
             }
+
+            else {
+                tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ERROU_TIRO;
+                tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ERROU_TIRO;
+                System.out.println("Erramos  o tiro capitão ");
+            }
+        } else if (tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO) {
+            tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ACERTOU_TIRO;
+            --naviosCapitao;
+            System.out.println("Você acertou um navio!");
         } else {
-            if (tabuleiroJogador1[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO) {
-                tabuleiroJogador1[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ACERTOU_TIRO;
-                naviosJogador1--;
-                System.out.println("Você acertou um navio!");
-            } else {
-                tabuleiroJogador1[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ERROU_TIRO;
-                System.out.println("Você errou o tiro!");
-            }
+            tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ERROU_TIRO;
+            System.out.println("Infelizmente erramos um navio"+pirata);
         }
     }
 
@@ -245,14 +267,14 @@ public class tabuleiromatrix {
      do{
          exibirTabuleirosDosJogadores();
          if (acaoDoJogador()) {
-             if (naviosJogador2 <= 0) {
-                 System.out.println(nomeJogador1 + " venceu o jogo!");
+             if (naviosPiratas <= 0) {
+                 System.out.println(capitao + " venceu o jogo!");
                  break;
              }
              // Verifico fim do jogo
              acaoDoComputador();
-             if (naviosJogador1 <= 0) {
-                 System.out.println(nomeJogador2 + " venceu o jogo!");
+             if (naviosCapitao <= 0) {
+                 System.out.println(pirata + " venceu o jogo!");
                  break;
              }
          }

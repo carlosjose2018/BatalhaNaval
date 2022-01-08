@@ -14,9 +14,9 @@ public class Aulas_Java {
     public static void main(String[] args) {
         letsGameInicio();
         NomesDosJogadores();
-        iniciandoOsTamanhosDosTabuleiros();
+        tamanhoDoTabuleiro();
 
-        instanciarContadoresDeNaviosDosJogadores();
+        instanciarQuantidadeDeNavios();
         inserirOsNaviosNosTabuleirosDosJogadores();
         tabuleiroDecição();
         exibirTabuleirosDosJogadores();
