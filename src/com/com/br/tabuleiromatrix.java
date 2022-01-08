@@ -217,7 +217,7 @@ public class tabuleiromatrix {
                 tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ERROU_TIRO;
                 System.out.println("Erramos  o tiro capitão ");
             }
-        } else if (tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO) {
+        } else if (tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO || tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == TIRO_CERTEIRO) {
             tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ACERTOU_TIRO;
             --naviosCapitao;
             System.out.println("Você acertou um navio!");
