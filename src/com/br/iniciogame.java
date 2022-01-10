@@ -1,6 +1,6 @@
 package com.br;
 
-public class inicioGame {
+public class iniciogame {
   public  static  void  letsGameInicio() {
     String InicioLoad = "  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \n" +
             "|    _____        _        _ _                _   _                   _    |\n" +
