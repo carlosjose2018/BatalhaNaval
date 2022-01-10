@@ -1,9 +1,9 @@
-package com.com.br;
+package com.company.GameNavalBatter;
 
 import java.util.Random;
 import java.util.Scanner;
 
-public class tabuleiromatrix {
+public class settings {
 
     static final int VAZIO = 0;
     static final int NAVIO = 1;
@@ -163,7 +163,7 @@ public class tabuleiromatrix {
         boolean retorno = true;
         if (posicoes[0] > tamanhoX -1) {
             retorno = false;
-            System.out.println("A posicao das letras não pode ser maior que " + (char)(tamanhoX + 64));
+            System.out.println("A posicao das letras não pode ser maior que " + (char)(tamanhoX + 10));
         }
 
         if (posicoes[1] > tamanhoY) {

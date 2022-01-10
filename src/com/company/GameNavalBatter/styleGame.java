@@ -1,6 +1,6 @@
-package com.br;
+package com.company.GameNavalBatter;
 
-public class inicioGame {
+public class styleGame {
   public  static  void  letsGameInicio() {
     String InicioLoad = "  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = \n" +
             "|    _____        _        _ _                _   _                   _    |\n" +

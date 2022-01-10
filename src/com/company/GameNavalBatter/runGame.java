@@ -1,14 +1,12 @@
-package com.company;
+package com.company.GameNavalBatter;
 
 
 
 
 
-import static com.br.iniciogame.letsGameInicio;
-
-import static com.com.br.tabuleiromatrix.*;
-
-public class Aulas_Java {
+import static com.company.GameNavalBatter.styleGame.letsGameInicio;
+import static com.company.GameNavalBatter.settings.*;
+public class runGame {
 
 
     public static void main(String[] args) {
