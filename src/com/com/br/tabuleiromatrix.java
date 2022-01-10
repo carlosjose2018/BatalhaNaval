@@ -110,7 +110,7 @@ public class tabuleiromatrix {
 
                 // Esconde o navio do inimigo
                 if(!seuTabuleiro && simbolo == 'N') {
-//                    simbolo = simbolos[VAZIO];
+                    simbolo = simbolos[VAZIO];
                 }
 
                 linhaDoTabuleiro += (char)(simbolo) + " | ";
