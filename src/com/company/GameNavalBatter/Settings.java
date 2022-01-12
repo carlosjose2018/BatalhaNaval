@@ -3,8 +3,7 @@ package com.company.GameNavalBatter;
 import java.util.Random;
 import java.util.Scanner;
 
-import static com.company.GameNavalBatter.Stylegame.posicaoColunaTabela;
-import static com.company.GameNavalBatter.Stylegame.posicaoLinhaTabela;
+import static com.company.GameNavalBatter.Stylegame.*;
 
 public class Settings {
 
@@ -70,8 +69,8 @@ public class Settings {
     public static int[][] novosTabuleiroComOsNaviosManual() {
         int novoTabuleiro[][] = tabuleiroVazio();
         int quantidadeRestanteDeNavios = 10;
+        int quantidadeTotalDeNavios = 0;
         int x= 0, y= 0;
-
         do {
             x = 0;
             y = 0;
@@ -79,12 +78,24 @@ public class Settings {
             for(int[] linha : novoTabuleiro) {
                 for (int coluna : linha) {
                         if(coluna == VAZIO) {
-                            posicaoLinhaTabela();
-                            x = input.nextInt();
-                            posicaoColunaTabela();
-                            y = input.nextInt();
+                            try{
+                                tabela();
+                                System.out.println("Posicione o navio no tabuleiro :\n Quantidade de navio Posicionado :"+quantidadeTotalDeNavios);
+                                String linhaTabela = input.next().toLowerCase();
+                                x = linhaTabela.charAt(0) - 97;
+                                y = Integer.parseInt(linhaTabela.substring(1)) - 1;
+                            }
+                            catch (NumberFormatException erro){
+                                System.out.println("Para posicionar o navio use o padrão letras para linhas e número para colunas:");
+                                System.out.println("Posicione o navio no tabuleiro :\n Quantidade de navio "+quantidadeTotalDeNavios);
+                                String linhaTabela = input.next().toLowerCase();
+                                x = linhaTabela.charAt(0) - 97;
+                                y = Integer.parseInt(linhaTabela.substring(1)) - 1;
+                            }
+
                             novoTabuleiro[x][y] = NAVIO;
                             quantidadeRestanteDeNavios--;
+                            quantidadeTotalDeNavios ++;
                             break;
                         }
                         if(quantidadeRestanteDeNavios < 0) {
@@ -114,7 +125,6 @@ public class Settings {
                 for (int coluna : linha) {
                     if (numeroAleatorio.nextInt(100) <= 10) {
                         if(coluna == VAZIO) {
-                            System.out.println(x+""+y);
                             novoTabuleiro[x][y] = NAVIO;
                             quantidadeRestanteDeNavios--;
                             break;
@@ -157,7 +167,7 @@ public class Settings {
         char letraDaLinha = 65;
         for(int[] linha : tabuleiro) {
             linhaDoTabuleiro = (letraDaLinha++) + " | ";
-            System.out.println("---------------------------------------");
+            System.out.println("--------------------------------------------");
             for (int coluna : linha) {
                 switch(coluna) {
                     case VAZIO :
@@ -194,9 +204,7 @@ public class Settings {
 
     public static void exibirTabuleirosDosJogadores() {
         exibirTabuleiro(capitao, tabuleiroCapitao, true);
-        exibirTabuleiro(pirata,tabuleiroPirata,false);
-        //caso seja retirado o tabuliro em baixo muda.
-        //Posivel implementação de vez ex  vez do pirata;
+       // exibirTabuleiro(pirata,tabuleiroPirata,false);
     }
 
     public static boolean validarPosicoesInseridasPeloJogador(int[] posicoes) {
