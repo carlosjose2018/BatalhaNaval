@@ -3,7 +3,10 @@ package com.company.GameNavalBatter;
 import java.util.Random;
 import java.util.Scanner;
 
-public class settings {
+import static com.company.GameNavalBatter.Stylegame.posicaoColunaTabela;
+import static com.company.GameNavalBatter.Stylegame.posicaoLinhaTabela;
+
+public class Settings {
 
     static final int VAZIO = 0;
     static final int NAVIO = 1;
@@ -16,15 +19,15 @@ public class settings {
 
 
     static String capitao, pirata;
-    static int tamanhoX =9, tamanhoY=9, quantidadeDeNavios=10;
+    static int tamanhoX =10, tamanhoY=10, quantidadeDeNavios=10;
     static int tabuleiroCapitao[][], tabuleiroPirata[][];
     static Scanner input = new Scanner(System.in);
     static int naviosCapitao, naviosPiratas;
 
     public static void NomesDosJogadores() {
         Random random = new Random();
-        System.out.println("Digite o nome do Capitão: ");
-        capitao = "Capitão  " + input.next();
+        System.out.println("Qual o seu nome Marinheiro: ");
+        capitao =  input.next();
         pirata = "";
         int numero = random.nextInt(3);
         switch (numero){
@@ -64,6 +67,41 @@ public class settings {
         naviosPiratas = quantidadeDeNavios;
     }
 
+    public static int[][] novosTabuleiroComOsNaviosManual() {
+        int novoTabuleiro[][] = tabuleiroVazio();
+        int quantidadeRestanteDeNavios = 10;
+        int x= 0, y= 0;
+
+        do {
+            x = 0;
+            y = 0;
+            Scanner input = new Scanner(System.in);
+            for(int[] linha : novoTabuleiro) {
+                for (int coluna : linha) {
+                        if(coluna == VAZIO) {
+                            posicaoLinhaTabela();
+                            x = input.nextInt();
+                            posicaoColunaTabela();
+                            y = input.nextInt();
+                            novoTabuleiro[x][y] = NAVIO;
+                            quantidadeRestanteDeNavios--;
+                            break;
+                        }
+                        if(quantidadeRestanteDeNavios < 0) {
+                            break;
+
+                    }
+                    y++;
+                }
+                y = 0;
+                x++;
+                if(quantidadeRestanteDeNavios <= 0) {
+                    break;
+                }
+            }
+        } while (quantidadeRestanteDeNavios > 0);
+        return novoTabuleiro;
+    }
     public static int[][] novosTabuleiroComOsNavios() {
         int novoTabuleiro[][] = tabuleiroVazio();
         int quantidadeRestanteDeNavios = quantidadeDeNavios;
@@ -76,6 +114,7 @@ public class settings {
                 for (int coluna : linha) {
                     if (numeroAleatorio.nextInt(100) <= 10) {
                         if(coluna == VAZIO) {
+                            System.out.println(x+""+y);
                             novoTabuleiro[x][y] = NAVIO;
                             quantidadeRestanteDeNavios--;
                             break;
@@ -97,7 +136,7 @@ public class settings {
     }
 
     public static void inserirOsNaviosNosTabuleirosDosJogadores() {
-        tabuleiroCapitao = novosTabuleiroComOsNavios();
+        tabuleiroCapitao =novosTabuleiroComOsNaviosManual();
         tabuleiroPirata =novosTabuleiroComOsNavios();
     }
 
@@ -118,11 +157,12 @@ public class settings {
         char letraDaLinha = 65;
         for(int[] linha : tabuleiro) {
             linhaDoTabuleiro = (letraDaLinha++) + " | ";
-
+            System.out.println("---------------------------------------");
             for (int coluna : linha) {
                 switch(coluna) {
                     case VAZIO :
                         linhaDoTabuleiro += "  | ";
+
                         break;
                     case NAVIO :
                         if (seuTabuleiro) {
@@ -175,7 +215,9 @@ public class settings {
     }
 
     public static String receberValorDigitadoPeloJogador() {
-        System.out.println("Digite a posição do seu tiro:");
+        System.out.println(
+                "Digite a posição do seu tiro:");
+
         return input.next();
     }
 
