@@ -2,6 +2,7 @@ package com.company.GameNavalBatter;
 
 import java.util.Random;
 import java.util.Scanner;
+import java.util.function.DoubleFunction;
 
 import static com.company.GameNavalBatter.Stylegame.*;
 
@@ -12,43 +13,35 @@ public class Settings {
     static final int ERROU_TIRO = 2;
     static final int ACERTOU_TIRO = 3;
     static final int TIRO_CERTEIRO = 4;
-    static final int TIRO_NA_AGUA_COM_NAVIO =5;
-    static final int POSICAO_X = 0;
-    static final int POSICAO_Y = 1;
+    static final int TIRO_NA_AGUA_COM_NAVIO = 5;
+
+    static final int LETRA = 0;
+    static final int NUMERO = 1;
+    static final int USUARIO = 1;
+    static final int COMPUTADOR = 2;
 
 
     static String capitao, pirata;
-    static int tamanhoX =10, tamanhoY=10, quantidadeDeNavios=10;
+    static int tamanhoX = 10, tamanhoY = 10, quantidadeDeNavios = 10;
     static int tabuleiroCapitao[][], tabuleiroPirata[][];
     static Scanner input = new Scanner(System.in);
     static int naviosCapitao, naviosPiratas;
 
     public static void NomesDosJogadores() {
         Random random = new Random();
-        System.out.println("Qual o seu nome Marinheiro: ");
-        capitao =  input.next();
-        pirata = "";
         int numero = random.nextInt(3);
-        switch (numero){
-            case 0:
-            pirata = "Capitão Barba Branca";
-            break;
-            case 1:
-                pirata ="Capitão Jack Sparrow";
-                break;
-            case 2:
-                pirata = "Capitão Alma Negra";
-                break;
-            case 3:
-                pirata = "Capitão  Gancho";
-                break;
-            default:
-                pirata = "Capitão Alma negra";
-        }
+        System.out.println("Qual o seu nome Marinheiro: ");
+        capitao = input.next();
 
+        String[] nomes = new String[]{
+                "Capitão Barba Branca",
+                "Capitão Jack Sparrow",
+                "Capitão Alma Negra",
+                "Capitão Gancho"
+        };
+
+        pirata = nomes[numero];
     }
-
-
 
     public static void tamanhoDoTabuleiro() {
         tabuleiroCapitao = tabuleiroVazio();
@@ -60,7 +53,6 @@ public class Settings {
     }
 
 
-
     public static void instanciarQuantidadeDeNavios() {
         naviosCapitao = quantidadeDeNavios;
         naviosPiratas = quantidadeDeNavios;
@@ -70,133 +62,101 @@ public class Settings {
         int novoTabuleiro[][] = tabuleiroVazio();
         int quantidadeRestanteDeNavios = 10;
         int quantidadeTotalDeNavios = 0;
-        int x= 0, y= 0;
+        int x = 0, y = 0;
         do {
             x = 0;
             y = 0;
             Scanner input = new Scanner(System.in);
-            for(int[] linha : novoTabuleiro) {
+            for (int[] linha : novoTabuleiro) {
                 for (int coluna : linha) {
-                        if(coluna == VAZIO) {
-                            try{
-                                tabela();
-                                System.out.println("Posicione o navio no tabuleiro :\n Quantidade de navio Posicionado :"+quantidadeTotalDeNavios);
-                                String linhaTabela = input.next().toLowerCase();
-                                x = linhaTabela.charAt(0) - 97;
-                                y = Integer.parseInt(linhaTabela.substring(1)) - 1;
-                            }
-                            catch (NumberFormatException erro){
-                                System.out.println("Para posicionar o navio use o padrão letras para linhas e número para colunas:");
-                                System.out.println("Posicione o navio no tabuleiro :\n Quantidade de navio "+quantidadeTotalDeNavios);
-                                String linhaTabela = input.next().toLowerCase();
-                                x = linhaTabela.charAt(0) - 97;
-                                y = Integer.parseInt(linhaTabela.substring(1)) - 1;
-                            }
-
-                            novoTabuleiro[x][y] = NAVIO;
-                            quantidadeRestanteDeNavios--;
-                            quantidadeTotalDeNavios ++;
-                            break;
+                    if (coluna == VAZIO) {
+                        try {
+                            tabela();
+                            System.out.println("Posicione o navio no tabuleiro :\n Quantidade de navio Posicionado :" + quantidadeTotalDeNavios);
+                            String linhaTabela = input.next().toLowerCase();
+                            x = linhaTabela.charAt(0) - 97;
+                            y = Integer.parseInt(linhaTabela.substring(1)) - 1;
+                        } catch (NumberFormatException erro) {
+                            System.out.println("Para posicionar o navio use o padrão letras para linhas e número para colunas:");
+                            System.out.println("Posicione o navio no tabuleiro :\n Quantidade de navio " + quantidadeTotalDeNavios);
+                            String linhaTabela = input.next().toLowerCase();
+                            x = linhaTabela.charAt(0) - 97;
+                            y = Integer.parseInt(linhaTabela.substring(1)) - 1;
                         }
-                        if(quantidadeRestanteDeNavios < 0) {
-                            break;
+                        // printar aqui....
+                        novoTabuleiro[x][y] = NAVIO;
+                        quantidadeRestanteDeNavios--;
+                        quantidadeTotalDeNavios++;
+                        break;
+                    }
+                    if (quantidadeRestanteDeNavios < 0) {
+                        break;
 
                     }
                     y++;
                 }
                 y = 0;
                 x++;
-                if(quantidadeRestanteDeNavios <= 0) {
+                if (quantidadeRestanteDeNavios <= 0) {
                     break;
                 }
             }
         } while (quantidadeRestanteDeNavios > 0);
         return novoTabuleiro;
     }
+
+
     public static int[][] novosTabuleiroComOsNavios() {
         int novoTabuleiro[][] = tabuleiroVazio();
         int quantidadeRestanteDeNavios = quantidadeDeNavios;
-        int x= 0, y= 0;
-        Random numeroAleatorio = new Random();
-        do {
-            x = 0;
-            y = 0;
-            for(int[] linha : novoTabuleiro) {
-                for (int coluna : linha) {
-                    if (numeroAleatorio.nextInt(100) <= 10) {
-                        if(coluna == VAZIO) {
-                            novoTabuleiro[x][y] = NAVIO;
-                            quantidadeRestanteDeNavios--;
-                            break;
-                        }
-                        if(quantidadeRestanteDeNavios < 0) {
-                            break;
-                        }
-                    }
-                    y++;
-                }
-                y = 0;
-                x++;
-                if(quantidadeRestanteDeNavios <= 0) {
-                    break;
-                }
+        int x, y;
+        Random rand = new Random();
+        while (quantidadeRestanteDeNavios > 0) {
+            x = rand.nextInt(tamanhoX);
+            y = rand.nextInt(tamanhoY);
+
+            if (novoTabuleiro[x][y] == VAZIO) {
+                novoTabuleiro[x][y] = NAVIO;
+                quantidadeRestanteDeNavios--;
             }
-        } while (quantidadeRestanteDeNavios > 0);
+        }
         return novoTabuleiro;
     }
 
+
     public static void inserirOsNaviosNosTabuleirosDosJogadores() {
-        tabuleiroCapitao =novosTabuleiroComOsNaviosManual();
-        tabuleiroPirata =novosTabuleiroComOsNavios();
+        tabuleiroCapitao = novosTabuleiroComOsNaviosManual();
+        // tabuleiro automatico
+//        tabuleiroCapitao = novosTabuleiroComOsNavios();
+        tabuleiroPirata = novosTabuleiroComOsNavios();
     }
 
-    public static void numeroDoTabuleiroX() {
-        int numeroDaColuna = 1;
-        String numerosDoTabuleiro = "    ";
 
-        for(int i = 0; i < 9; i++) {
-            numerosDoTabuleiro += (numeroDaColuna++) + "   ";
+    public static void numeroDoTabuleiroX() {
+        for (int i = 1; i <= tamanhoY; i++) {
+            System.out.print("   " + i);
         }
-        System.out.println(numerosDoTabuleiro);
+        System.out.print("\n");
     }
 
     public static void exibirTabuleiro(String nomeDoJogador, int[][] tabuleiro, boolean seuTabuleiro) {
         System.out.println("|----- " + nomeDoJogador + " -----|");
         numeroDoTabuleiroX();
-        String linhaDoTabuleiro = "";
-        char letraDaLinha = 65;
-        for(int[] linha : tabuleiro) {
+        char letraDaLinha = 'A';
+        String linhaDoTabuleiro;
+        char[] simbolos = new char[]{' ', 'N', '-', '*', 'X', 'n'};
+
+        for (int x = 0; x < tamanhoX; x++) {
             linhaDoTabuleiro = (letraDaLinha++) + " | ";
-            System.out.println("--------------------------------------------");
-            for (int coluna : linha) {
-                switch(coluna) {
-                    case VAZIO :
-                        linhaDoTabuleiro += "  | ";
+            for (int y = 0; y < tamanhoY; y++) {
+                int simbolo = simbolos[tabuleiro[x][y]];
 
-                        break;
-                    case NAVIO :
-                        if (seuTabuleiro) {
-                            linhaDoTabuleiro += "N | ";
-                            break;
-                        } else {
-                            linhaDoTabuleiro += " | ";
-                            break;
-                        }
-                    case ERROU_TIRO :
-                        linhaDoTabuleiro += "- | ";
-                        break;
-
-                    case ACERTOU_TIRO :
-                        linhaDoTabuleiro += "* | ";
-                        break;
-                    case TIRO_CERTEIRO:
-                        linhaDoTabuleiro +="X | ";
-                        break;
-                    case TIRO_NA_AGUA_COM_NAVIO:
-                        linhaDoTabuleiro +="n | ";
-                        break;
-
+                // Esconde o navio do inimigo
+                if (!seuTabuleiro && simbolo == 'N') {
+                    simbolo = simbolos[VAZIO];
                 }
+
+                linhaDoTabuleiro += (char) (simbolo) + " | ";
             }
             System.out.println(linhaDoTabuleiro);
         }
@@ -204,134 +164,154 @@ public class Settings {
 
     public static void exibirTabuleirosDosJogadores() {
         exibirTabuleiro(capitao, tabuleiroCapitao, true);
-       // exibirTabuleiro(pirata,tabuleiroPirata,false);
+        exibirTabuleiro(pirata,tabuleiroPirata,false);
     }
 
-    public static boolean validarPosicoesInseridasPeloJogador(int[] posicoes) {
-        boolean retorno = true;
-        if (posicoes[0] > tamanhoX -1) {
-            retorno = false;
-            System.out.println("A posicao das letras não pode ser maior que " + (char)(tamanhoX + 10));
+    public static boolean validarPosicoesInseridasPeloJogador(String tiroDoJogador) {
+        int[] posicoes = retornarPosicoesDigitadasPeloJogador(tiroDoJogador);
+        int letra = posicoes[0], numero = posicoes[1];
+
+        if (letra > tamanhoX || letra <= 0) {
+            System.out.println("A posicao da letra deve estar no intervalo de A até " + (char) (tamanhoX + 64));
+            return false;
+        }
+        if (numero > tamanhoY || numero <= 0) {
+            System.out.println("A posicao numérica deve estar no intervalo de 1 até " + tamanhoY);
+            return false;
         }
 
-        if (posicoes[1] > tamanhoY) {
-            retorno = false;
-            System.out.println("A posicao numérica não pode ser maior que " + tamanhoY);
-        }
-
-        return retorno;
+        return true;
     }
+
 
     public static String receberValorDigitadoPeloJogador() {
-        System.out.println(
-                "Digite a posição do seu tiro:");
+        System.out.println("Digite a posição que deseja efetuar a ação:");
+        String tiroDoJogador = input.next();
 
-        return input.next();
+        if (validarTiroDoJogador(tiroDoJogador) == false) {
+            System.out.println("Posição inválida 1 ");
+            return receberValorDigitadoPeloJogador();
+        }
+
+        if (validarPosicoesInseridasPeloJogador(tiroDoJogador) == false) {
+            System.out.println("Posição inválida 2 ");
+            return receberValorDigitadoPeloJogador();
+        }
+
+        return tiroDoJogador;
     }
 
+
     public static boolean validarTiroDoJogador(String tiroDoJogador) {
-        int quantidadeDeNumeros = (tamanhoY > 10) ? 2 : 1;
-        String expressaoDeVerificacao = "^[A-Za-z]{1}[0-9]{"
-                + quantidadeDeNumeros + "}$";
-        return tiroDoJogador.matches(expressaoDeVerificacao);
+        //regex
+
+        String expressaoDeVerificacaoDoisDigitos = "^[A-Za-z]{1}[0-9]{2}$";
+        String expressaoDeVerificacaoUmDigito = "^[A-Za-z]{1}[0-9]{1}$";
+        boolean doisDigitos = tiroDoJogador.matches(expressaoDeVerificacaoDoisDigitos);
+        boolean umDigito = tiroDoJogador.matches(expressaoDeVerificacaoUmDigito);
+
+        if (doisDigitos == true || umDigito == true) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static int[] retornarPosicoesDigitadasPeloJogador(String tiroDoJogador) {
-        String tiro = tiroDoJogador.toLowerCase();
-        int[] retorno = new int[2];
-        retorno[POSICAO_X] = tiro.charAt(0) - 97;
-        retorno[POSICAO_Y] = Integer.parseInt(tiro.substring(1)) - 1;
-        return retorno;
+        int[] posicoes = new int[2];
+        tiroDoJogador = tiroDoJogador.toLowerCase();
+        posicoes[LETRA] = tiroDoJogador.charAt(0) - 'a' + 1;
+        String posicoesNumericas = tiroDoJogador.substring(1);
+        int resultado = Integer.parseInt(posicoesNumericas);
+        posicoes[NUMERO] = resultado;
+
+        return posicoes;
     }
 
-    public static void inserirValoresDaAcaoNoTabuleiro(int[] posicoes, int numeroDoJogador) {
-        if (numeroDoJogador == 1) {
-            if (tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO && tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO) {
-                tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = TIRO_CERTEIRO;
-                tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = TIRO_CERTEIRO;
+    public static void inserirValoresDaAcaoNoTabuleiro(int letra, int numero, int numeroDoJogador) {
+        letra--;
+        numero--;
+
+        if (numeroDoJogador == USUARIO) {
+            if (tabuleiroPirata[letra][numero] == NAVIO) { // Acertei um navio
                 naviosPiratas--;
-                System.out.println("Você acertou um navio!"+naviosPiratas);
-
-            }else if(tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO || tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == ERROU_TIRO){
-                tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = TIRO_NA_AGUA_COM_NAVIO;
-                tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = TIRO_NA_AGUA_COM_NAVIO;
-                System.out.println("Capitão Danificamos nosso navio e ainda erramoso tiro"+numeroDoJogador);
-
-            }else if(tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]]== NAVIO){
-                tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]]= ACERTOU_TIRO;
-                naviosPiratas --;
-                System.out.println("Acertamos no navio do pirata"+naviosPiratas);
+                if (tabuleiroCapitao[letra][numero] == NAVIO) {
+                    tabuleiroPirata[letra][numero] = TIRO_CERTEIRO;
+                    tabuleiroCapitao[letra][numero] = TIRO_CERTEIRO;
+                    System.out.println("Que tiro certeiro! Ainda faltam " + naviosPiratas + " navio(s)");
+                } else {
+                    tabuleiroPirata[letra][numero] = ACERTOU_TIRO;
+//                    tabuleiroCapitao[letra][numero] = ACERTOU_TIRO;
+                    System.out.println("Acertamos um navio pirata! Ainda faltam " + naviosPiratas + " navio(s)");
+                }
+            } else if (tabuleiroPirata[letra][numero] == VAZIO) { // Errei um navio
+                if (tabuleiroCapitao[letra][numero] == NAVIO) {
+                    tabuleiroPirata[letra][numero] = TIRO_NA_AGUA_COM_NAVIO;
+                    tabuleiroCapitao[letra][numero] = TIRO_NA_AGUA_COM_NAVIO;
+                    System.out.println("Capitão Danificamos nosso navio e ainda erramos tiro");
+                } else {
+                    tabuleiroPirata[letra][numero] = ERROU_TIRO;
+                    System.out.println("Erramos o tiro capitão");
+                }
+            } else { // Já fiz essa jogada
+                System.out.println("Opa, já fizemos essa jogada!");
             }
-
-            else {
-                tabuleiroPirata[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ERROU_TIRO;
-                System.out.println("Erramos  o tiro capitão ");
+        } else { // Jogada computador
+            if (tabuleiroCapitao[letra][numero] == NAVIO || tabuleiroCapitao[letra][numero] == TIRO_NA_AGUA_COM_NAVIO) { // Computador acertou um navio
+                tabuleiroCapitao[letra][numero] = ACERTOU_TIRO;
+                naviosCapitao--;
+                System.out.println("Nossa! Os piratas acertaram um navio nosso, ainda temos " + naviosCapitao + " navio(s)");
+            } else if (tabuleiroCapitao[letra][numero] == VAZIO) { // Computador errou um navio
+                tabuleiroCapitao[letra][numero] = ERROU_TIRO;
+                System.out.println("O computador errou o tiro!");
+            } else { // Computador já fez essa jogada
+                System.out.println("Opa, o computador já fez essa jogada!");
             }
-        } else if (tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == NAVIO || tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == TIRO_CERTEIRO)   {
-            tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ACERTOU_TIRO;
-            --naviosCapitao;
-            System.out.println("Você acertou um navio!"+naviosCapitao);
-        }else if(tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] == TIRO_NA_AGUA_COM_NAVIO){
-            tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ACERTOU_TIRO;
-            --naviosCapitao;
-            System.out.println("Você acertou um navio!"+naviosCapitao);
-        } else {
-            tabuleiroCapitao[posicoes[POSICAO_X]][posicoes[POSICAO_Y]] = ERROU_TIRO;
-            System.out.println("Infelizmente erramos um navio"+pirata);
         }
     }
 
-    public static boolean acaoDoJogador() {
-        boolean acaoValida = true;
+
+    public static void acaoDoJogador() {
         String tiroDoJogador = receberValorDigitadoPeloJogador();
-        if (validarTiroDoJogador(tiroDoJogador)) {
-            int[] posicoes = retornarPosicoesDigitadasPeloJogador(tiroDoJogador);
-            if (validarPosicoesInseridasPeloJogador(posicoes)) {
-                inserirValoresDaAcaoNoTabuleiro(posicoes, 1);
-            } else {
-                acaoValida = false;
-            }
-        } else {
-            System.out.println("Posição inválida");
-            acaoValida = false;
-        }
-        return acaoValida;
+        int[] posicoes = retornarPosicoesDigitadasPeloJogador(tiroDoJogador);
+        int letra = posicoes[0], numero = posicoes[1];
+
+        inserirValoresDaAcaoNoTabuleiro(letra, numero, USUARIO);
     }
 
     public static void acaoDoComputador() {
         int[] posicoes = retornarJogadaDoComputador();
-        inserirValoresDaAcaoNoTabuleiro(posicoes, 2);
+        int letra = posicoes[0], numero = posicoes[1];
+        inserirValoresDaAcaoNoTabuleiro(letra, numero, COMPUTADOR);
     }
 
     public static int[] retornarJogadaDoComputador() {
         int[] posicoes = new int[2];
-        posicoes[POSICAO_X] = retornarJogadaAleatoriaDoComputador(tamanhoX);
-        posicoes[POSICAO_Y] = retornarJogadaAleatoriaDoComputador(tamanhoY);
+        posicoes[LETRA] = retornarJogadaAleatoriaDoComputador(tamanhoX) + 1;
+        posicoes[NUMERO] = retornarJogadaAleatoriaDoComputador(tamanhoY) + 1;
         return posicoes;
     }
 
     public static int retornarJogadaAleatoriaDoComputador(int limite) {
         Random jogadaDoComputador = new Random();
         int numeroGerado = jogadaDoComputador.nextInt(limite);
-        return (numeroGerado == limite) ? --numeroGerado : numeroGerado;
+        return numeroGerado;
     }
- public static  void tabuleiroDecição(){
-     boolean jogoAtivo = true;
-     do{
-         exibirTabuleirosDosJogadores();
-         if (acaoDoJogador()) {
-             if (naviosPiratas <= 0) {
-                 System.out.println(capitao + " venceu o jogo!");
-                 break;
-             }
-             // Verifico fim do jogo
-             acaoDoComputador();
-             if (naviosCapitao <= 0) {
-                 System.out.println(pirata + " venceu o jogo!");
-                 break;
-             }
-         }
 
-     }while (jogoAtivo);
- }
+
+    public static void tabuleiroDecisão() {
+        while (true) {
+            exibirTabuleirosDosJogadores();
+            acaoDoJogador();
+            if (naviosPiratas <= 0) {
+                System.out.println(capitao + " venceu o jogo!");
+                break;
+            }
+            acaoDoComputador();
+            if (naviosCapitao <= 0) {
+                System.out.println(pirata + " venceu o jogo!");
+                break;
+            }
+        }
+    }
 }
