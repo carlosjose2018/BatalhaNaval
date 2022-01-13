@@ -23,7 +23,7 @@ public class RunGame {
                 tamanhoDoTabuleiro();
                 instanciarQuantidadeDeNavios();
                 inserirOsNaviosNosTabuleirosDosJogadores();
-                tabuleiroDecição();
+                tabuleiroDecisão();
                 exibirTabuleirosDosJogadores();
             }
         }, 1000L);
