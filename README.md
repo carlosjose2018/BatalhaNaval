@@ -51,7 +51,7 @@ vamos alterar levemente as especificações do jogo:
 
 Desafio: Batalha Naval
 
-• Durante a partida o programa exibirá apenas a situação atual do jogador.
+• Durante a partida o programa exibirá apenas a situação atual do jogador este tabuleiro pode ser gerado manual ou automatico.
 
 • Em cada turno, a situação atual do tabuleiro do jogador deverá ser
 impressa na tela de acordo com o modelo a seguir:
@@ -83,3 +83,144 @@ impressa na tela de acordo com o modelo a seguir:
 | J |   |   |   |   |   |   | N |   |   |   |
 ---------------------------------------------
 ````
+# Codificando
+
+```
+                      inserirOsNaviosNosTabuleirosDosJogadores();
+```
+````
+    public static void inserirOsNaviosNosTabuleirosDosJogadores() {
+          Scanner input = new Scanner(System.in); 
+           System.out.println("Gostaria de posicionar os navios manualmente ou automático? Digite M para manual ou A para automático");
+      String definirModoPosicao = input.next().toLowerCase();
+        System.out.println(definirModoPosicao);
+        if (definirModoPosicao.equals("a")){
+            tabuleiroCapitao = novosTabuleiroComOsNavios();
+            tabuleiroPirata = novosTabuleiroComOsNavios();
+        }
+        else {
+            tabuleiroCapitao = novosTabuleiroComOsNaviosManual();
+            tabuleiroPirata = novosTabuleiroComOsNavios();
+        }
+    }
+    
+````
+
+// Método para inserir Navio no tabuleiro dependendo da escolha do usuário podendo ser tanto automático como manual.
+
+#
+```
+                                  ExibirTabuleiro();
+```
+````
+    public static void exibirTabuleiro(String nomeDoJogador, int[][] tabuleiro, boolean seuTabuleiro) {
+        System.out.println("|----- " + nomeDoJogador + " -----|");
+        numeroDoTabuleiroX();
+        char letraDaLinha = 'A';
+        String linhaDoTabuleiro;
+        char[] simbolos = new char[]{' ', 'N', '-', '*', 'X', 'n'};
+
+        for (int x = 0; x < tamanhoX; x++) {
+            linhaDoTabuleiro = (letraDaLinha++) + " | ";
+            for (int y = 0; y < tamanhoY; y++) {
+                int simbolo = simbolos[tabuleiro[x][y]];
+
+                // Esconde o navio do inimigo
+                if (!seuTabuleiro && simbolo == 'N') {
+                    simbolo = simbolos[VAZIO];
+                }
+
+                linhaDoTabuleiro += (char) (simbolo) + " | ";
+            }
+            System.out.println(linhaDoTabuleiro);
+        }
+    }
+    
+````
+/*
+/* Método exibirTabuleiro tem 3 parâmetro cujo parâmetro faz inserção de nome, cria string linhas e colunas e posiciona   caracteres  tabuleiro. 
+*/
+
+#
+```
+                                 inserirValoresDaAcaoNoTabuleiro();
+```
+````
+    public static void inserirValoresDaAcaoNoTabuleiro(int letra, int numero, int numeroDoJogador) {
+        letra--;
+        numero--;
+
+        if (numeroDoJogador == USUARIO) {
+            if (tabuleiroPirata[letra][numero] == NAVIO) { // Acertei um navio
+                naviosPiratas--;
+                if (tabuleiroCapitao[letra][numero] == NAVIO) {
+                    tabuleiroPirata[letra][numero] = TIRO_CERTEIRO;
+                    tabuleiroCapitao[letra][numero] = TIRO_CERTEIRO;
+                    if (naviosPiratas > 1){
+                        System.out.printf("Que tiro certeiro! Ainda faltam %d navios a serem abatidos! \n",naviosPiratas);
+                    }
+                    else {
+                        System.out.printf("Que tiro certeiro! Falta apenas %d navio para ganharmos a batalha! \n",naviosPiratas);
+                    }
+                }
+                else {
+                    tabuleiroPirata[letra][numero] = ACERTOU_TIRO;
+//                    tabuleiroCapitao[letra][numero] = ACERTOU_TIRO;
+                    System.out.println("Acertamos um navio pirata! Ainda faltam " + naviosPiratas + " navio(s)");
+                }
+            } else if (tabuleiroPirata[letra][numero] == VAZIO) { // Errei um navio
+                if (tabuleiroCapitao[letra][numero] == NAVIO) {
+                    tabuleiroPirata[letra][numero] = TIRO_NA_AGUA_COM_NAVIO;
+                    tabuleiroCapitao[letra][numero] = TIRO_NA_AGUA_COM_NAVIO;
+                    if (naviosPiratas > 1) {
+                        System.out.printf("Capitão Danificamos nosso navio e ainda erramos tiro! Ainda faltam %d navios a serem abatidos! \n", naviosPiratas);
+                    } else {
+                        System.out.printf("Capitão Danificamos nosso navio e ainda erramos tiro! Falta apenas %d navio para ganharmos a batalha! \n", naviosPiratas);
+                    }
+
+                } else {
+                    tabuleiroPirata[letra][numero] = ERROU_TIRO;
+                    if (naviosPiratas > 1){
+                        System.out.printf("Erramos o tiro capitão! Ainda faltam %d navios a serem abatidos! \n",naviosPiratas);
+                    }
+                    else {
+                        System.out.printf("Erramos o tiro capitão! Mas falta apenas %d navio para ganharmos a batalha! \n",naviosPiratas);
+                    }
+                }
+            } else { // Já fiz essa jogada
+                System.out.println("Opa, já fizemos essa jogada!");
+            }
+        } else { // Jogada computador
+            if (tabuleiroCapitao[letra][numero] == NAVIO || tabuleiroCapitao[letra][numero] == TIRO_NA_AGUA_COM_NAVIO) { // Computador acertou um navio
+                tabuleiroCapitao[letra][numero] = ACERTOU_TIRO;
+                naviosCapitao--;
+                if (naviosCapitao > 1){
+                    System.out.printf("Nossa! Os piratas acertaram um navio nosso! Ainda temos %d navios! \n",naviosCapitao);
+                }
+                else {
+                    System.out.printf("Nossa! Os piratas acertaram um navio nosso! Resta apenas %d navio para eles ganharem!\n", naviosCapitao);
+
+                }
+            } else if (tabuleiroCapitao[letra][numero] == VAZIO) { // Computador errou um navio
+                tabuleiroCapitao[letra][numero] = ERROU_TIRO;
+                if (naviosCapitao > 1){
+                    System.out.printf("O computador errou o tiro! Ainda temos %d navios! \n",naviosCapitao);
+                }
+                else {
+                    System.out.printf("O computador errou o tiro! Resta apenas %d navio para eles ganharem! \n", naviosCapitao);
+
+                }
+            } else { // Computador já fez essa jogada
+                System.out.println("Opa, o computador já fez essa jogada!");
+            }
+        }
+    }
+    
+````
+/*
+Método inserirValoresDaAcaoNoTabuleiro  tem a logica principal do jogo através dela é verificado a posição do navio ,tiro certeiro ,tiro na agua ,Tiro certeiro com navio posicionado X (xis maiúsculo) e Tiro na água com navio posicionado n (ene minúsculo).
+
+*/
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
