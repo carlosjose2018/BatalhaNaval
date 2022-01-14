@@ -19,7 +19,7 @@ public class RunGame {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                NomesDosJogadores();
+                nomesDosJogadores();
                 tamanhoDoTabuleiro();
                 instanciarQuantidadeDeNavios();
                 inserirOsNaviosNosTabuleirosDosJogadores();

@@ -1,5 +1,6 @@
 package com.company.GameNavalBatter;
 
+import java.util.Locale;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.function.DoubleFunction;
@@ -27,7 +28,7 @@ public class Settings {
     static Scanner input = new Scanner(System.in);
     static int naviosCapitao, naviosPiratas;
 
-    public static void NomesDosJogadores() {
+    public static void nomesDosJogadores() {
         Random random = new Random();
         int numero = random.nextInt(3);
         System.out.println("Qual o seu nome Marinheiro: ");
@@ -76,7 +77,7 @@ public class Settings {
                             String linhaTabela = input.next().toLowerCase();
                             x = linhaTabela.charAt(0) - 97;
                             y = Integer.parseInt(linhaTabela.substring(1)) - 1;
-                        } catch (NumberFormatException erro) {
+                        } catch (ArrayIndexOutOfBoundsException erro) {
                             System.out.println("Para posicionar o navio use o padrão letras para linhas e número para colunas:");
                             System.out.println("Posicione o navio no tabuleiro :\n Quantidade de navio " + quantidadeTotalDeNavios);
                             String linhaTabela = input.next().toLowerCase();
@@ -125,10 +126,18 @@ public class Settings {
 
 
     public static void inserirOsNaviosNosTabuleirosDosJogadores() {
-        tabuleiroCapitao = novosTabuleiroComOsNaviosManual();
-        // tabuleiro automatico
-//        tabuleiroCapitao = novosTabuleiroComOsNavios();
-        tabuleiroPirata = novosTabuleiroComOsNavios();
+        Scanner input = new Scanner(System.in);
+        System.out.println("Gostaria de posicionar os navios manualmente ou automático? Digite M para manual ou A para automático");
+        String definirModoPosicao = input.next().toLowerCase();
+        System.out.println(definirModoPosicao);
+        if (definirModoPosicao.equals("a")){
+            tabuleiroCapitao = novosTabuleiroComOsNavios();
+            tabuleiroPirata = novosTabuleiroComOsNavios();
+        }
+        else {
+            tabuleiroCapitao = novosTabuleiroComOsNaviosManual();
+            tabuleiroPirata = novosTabuleiroComOsNavios();
+        }
     }
 
 
@@ -238,8 +247,14 @@ public class Settings {
                 if (tabuleiroCapitao[letra][numero] == NAVIO) {
                     tabuleiroPirata[letra][numero] = TIRO_CERTEIRO;
                     tabuleiroCapitao[letra][numero] = TIRO_CERTEIRO;
-                    System.out.println("Que tiro certeiro! Ainda faltam " + naviosPiratas + " navio(s)");
-                } else {
+                    if (naviosPiratas > 1){
+                        System.out.printf("Que tiro certeiro! Ainda faltam %d navios a serem abatidos! \n",naviosPiratas);
+                    }
+                    else {
+                        System.out.printf("Que tiro certeiro! Falta apenas %d navio para ganharmos a batalha! \n",naviosPiratas);
+                    }
+                }
+                else {
                     tabuleiroPirata[letra][numero] = ACERTOU_TIRO;
 //                    tabuleiroCapitao[letra][numero] = ACERTOU_TIRO;
                     System.out.println("Acertamos um navio pirata! Ainda faltam " + naviosPiratas + " navio(s)");
@@ -248,10 +263,20 @@ public class Settings {
                 if (tabuleiroCapitao[letra][numero] == NAVIO) {
                     tabuleiroPirata[letra][numero] = TIRO_NA_AGUA_COM_NAVIO;
                     tabuleiroCapitao[letra][numero] = TIRO_NA_AGUA_COM_NAVIO;
-                    System.out.println("Capitão Danificamos nosso navio e ainda erramos tiro");
+                    if (naviosPiratas > 1) {
+                        System.out.printf("Capitão Danificamos nosso navio e ainda erramos tiro! Ainda faltam %d navios a serem abatidos! \n", naviosPiratas);
+                    } else {
+                        System.out.printf("Capitão Danificamos nosso navio e ainda erramos tiro! Falta apenas %d navio para ganharmos a batalha! \n", naviosPiratas);
+                    }
+
                 } else {
                     tabuleiroPirata[letra][numero] = ERROU_TIRO;
-                    System.out.println("Erramos o tiro capitão");
+                    if (naviosPiratas > 1){
+                        System.out.printf("Erramos o tiro capitão! Ainda faltam %d navios a serem abatidos! \n",naviosPiratas);
+                    }
+                    else {
+                        System.out.printf("Erramos o tiro capitão! Mas falta apenas %d navio para ganharmos a batalha! \n",naviosPiratas);
+                    }
                 }
             } else { // Já fiz essa jogada
                 System.out.println("Opa, já fizemos essa jogada!");
@@ -260,10 +285,22 @@ public class Settings {
             if (tabuleiroCapitao[letra][numero] == NAVIO || tabuleiroCapitao[letra][numero] == TIRO_NA_AGUA_COM_NAVIO) { // Computador acertou um navio
                 tabuleiroCapitao[letra][numero] = ACERTOU_TIRO;
                 naviosCapitao--;
-                System.out.println("Nossa! Os piratas acertaram um navio nosso, ainda temos " + naviosCapitao + " navio(s)");
+                if (naviosCapitao > 1){
+                    System.out.printf("Nossa! Os piratas acertaram um navio nosso! Ainda temos %d navios! \n",naviosCapitao);
+                }
+                else {
+                    System.out.printf("Nossa! Os piratas acertaram um navio nosso! Resta apenas %d navio para eles ganharem!\n", naviosCapitao);
+
+                }
             } else if (tabuleiroCapitao[letra][numero] == VAZIO) { // Computador errou um navio
                 tabuleiroCapitao[letra][numero] = ERROU_TIRO;
-                System.out.println("O computador errou o tiro!");
+                if (naviosCapitao > 1){
+                    System.out.printf("O computador errou o tiro! Ainda temos %d navios! \n",naviosCapitao);
+                }
+                else {
+                    System.out.printf("O computador errou o tiro! Resta apenas %d navio para eles ganharem! \n", naviosCapitao);
+
+                }
             } else { // Computador já fez essa jogada
                 System.out.println("Opa, o computador já fez essa jogada!");
             }
@@ -304,12 +341,12 @@ public class Settings {
             exibirTabuleirosDosJogadores();
             acaoDoJogador();
             if (naviosPiratas <= 0) {
-                System.out.println(capitao + " venceu o jogo!");
+                voceGanhou();
                 break;
             }
             acaoDoComputador();
             if (naviosCapitao <= 0) {
-                System.out.println(pirata + " venceu o jogo!");
+                vocePerdeu();
                 break;
             }
         }
